@@ -52,7 +52,6 @@ class P2p_simulation:
         
     def connect_nodes(self, connections_by_node):
         for i in range(len(self.nodes)):
-            print(i)
             if i < len(self.nodes)-1:
                 self.nodes[i].connections.add(self.nodes[i+1].id)
                 self.nodes[i+1].connections.add(self.nodes[i].id)
@@ -100,12 +99,9 @@ class P2p_simulation:
             if node_parts:
                 total_parts = next(iter(node_parts)).total_parts
                 found_parts.update(node_parts)
-            
-            print(f"Conexiones: {node.connections}")
-            
+                        
             while search_quewe:
                 current_id = search_quewe.pop(0)
-                print(current_id)
                 current_node = self.search_node(current_id)
                 
                 if current_node.id in visited:
@@ -146,6 +142,7 @@ class Presenter:
     def run(self):
         self.id_books = 0
         num_nodes = input("Ingrese la cantidad de nodos que se manejará:\n")
+        self.num_nodes = int(num_nodes)
         self.p2p_simulation = P2p_simulation(int(num_nodes), 0)
         self.show_menu()
         
@@ -171,6 +168,10 @@ class Presenter:
         title_book = input("Ingrese el nombre del libro:\n")
         content_book = input("Ingrese el contenido del libro:\n")
         num_parts = int(input("Ingrese la cantidad de partes en la que desea dividir el libro: \n"))
+        
+        while num_parts > self.num_nodes:
+            print("La cantidad de partes no puede ser mayor a la cantidad de nodos")
+            num_parts = int(input("Ingrese la cantidad de partes en la que desea dividir el libro: \n"))
         
         self.p2p_simulation.create_book(Book(self.id_books, title_book, content_book), num_parts)
         print(f"el libro fue creado con el id {self.id_books}\n")
